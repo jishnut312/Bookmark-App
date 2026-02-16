@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase, type Bookmark } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
@@ -29,16 +29,7 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      fetchBookmarks();
-      subscribeToBookmarks();
-    } else {
-      setBookmarks([]);
-    }
-  }, [user]);
-
-  const fetchBookmarks = async () => {
+  const fetchBookmarks = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -52,9 +43,9 @@ export default function Home() {
     } else {
       setBookmarks(data || []);
     }
-  };
+  }, [user]);
 
-  const subscribeToBookmarks = () => {
+  const subscribeToBookmarks = useCallback(() => {
     if (!user) return;
 
     const channel = supabase
@@ -80,7 +71,18 @@ export default function Home() {
     return () => {
       supabase.removeChannel(channel);
     };
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchBookmarks();
+      subscribeToBookmarks();
+    } else {
+      setBookmarks([]);
+    }
+  }, [user, fetchBookmarks, subscribeToBookmarks]);
+
+
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -158,7 +160,7 @@ export default function Home() {
         <div className="relative card max-w-md w-full text-center space-y-8 animate-pulse-glow">
           <div className="space-y-4">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-2xl">
-              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
             </div>
