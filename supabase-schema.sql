@@ -4,6 +4,7 @@ create table bookmarks (
   user_id uuid references auth.users not null,
   title text not null,
   url text not null,
+  tags text[] default '{}',
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
