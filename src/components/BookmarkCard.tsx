@@ -68,7 +68,7 @@ export function BookmarkCard({ bookmark, onDelete, onOpen }: BookmarkCardProps) 
                 {/* Delete Button (Visible on hover) */}
                 <button
                     onClick={handleDelete}
-                    className="p-1.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all -mr-1"
+                    className="p-1.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all -mr-1 ml-auto"
                     title="Delete Bookmark"
                 >
                     <Trash2 className="w-4 h-4" />

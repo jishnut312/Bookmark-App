@@ -75,7 +75,9 @@ export default function Home() {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Realtime Status:', status);
+      });
 
     return () => {
       supabase.removeChannel(channel).catch(() => { });
@@ -100,8 +102,13 @@ export default function Home() {
   const confirmDelete = async () => {
     if (!deleteId) return;
     setIsDeleting(true);
-    await supabase.from('bookmarks').delete().eq('id', deleteId);
-    fetchBookmarks(); // Immediate refresh
+    const { error } = await supabase.from('bookmarks').delete().eq('id', deleteId);
+    if (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete bookmark');
+    } else {
+      fetchBookmarks(); // Immediate refresh
+    }
     setIsDeleting(false);
     setDeleteId(null);
   };
