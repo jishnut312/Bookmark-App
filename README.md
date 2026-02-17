@@ -141,6 +141,45 @@ bookmark-app/
 - **Responsive Layout** - Mobile-first design approach
 - **Instant Feedback** - Loading states and error handling
 
+## 🤖 AI Tools Used
+
+**Question: Did you use any AI tools? If yes, which ones and how did you use them?**
+
+**Answer:**
+
+Yes, I used **AI assistants** to help with development and problem-solving throughout this project, specifically **Google's Gemini** and **Claude 4.5 Sonnet (Anthropic)**.
+
+### How I used them:
+
+**1. Initial Setup & Architecture**
+- Guidance on project structure with Next.js App Router
+- Supabase configuration and schema design
+- Setting up Google OAuth authentication
+
+**2. Problem Solving**
+- **WebSocket blocking issue:** When Realtime updates failed due to network restrictions, AI helped me implement a polling fallback strategy that automatically switches when WebSocket connections are blocked
+- **Mobile UX issue:** Fixed the delete button visibility on touch devices by using responsive Tailwind classes
+- **Database schema:** Resolved 404 errors by adding the missing `tags` column with proper PostgreSQL array syntax
+- **OAuth redirect configuration:** Debugged and fixed Google OAuth redirect URLs for both local and production environments
+
+**3. Code Quality & Best Practices**
+- TypeScript type safety
+- Row Level Security policy implementation
+- Error handling and user feedback
+- Responsive design patterns
+- Modern UI/UX with Framer Motion animations
+
+**4. Documentation**
+- README structure and comprehensive problem-solution documentation
+
+### My Approach:
+I used AI as **collaborative coding partners** - switching between Gemini and Claude Sonnet depending on the task. I understood the requirements, made architectural decisions, and the AI tools helped me implement solutions efficiently and debug issues. I reviewed and understood all code before integrating it, ensuring I can explain and maintain every part of the application.
+
+### Why multiple AI tools?
+Different AI models have different strengths - I leveraged both to get the best solutions for different types of problems (architecture vs. debugging vs. UI/UX).
+
+This approach allowed me to deliver a production-ready app with professional error handling and graceful degradation (polling fallback) within the time limit.
+
 ## 📝 License
 
 MIT
