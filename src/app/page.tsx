@@ -55,18 +55,22 @@ export default function Home() {
     }
   }, [user]);
 
-  // Real-time Subscription
+  // Real-time Subscription with Polling Fallback
   useEffect(() => {
     if (!user) return;
 
     fetchBookmarks();
+
+    let pollingInterval: NodeJS.Timeout | null = null;
+    let realtimeWorking = false;
 
     const channel = supabase
       .channel('realtime_bookmarks')
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'bookmarks', filter: `user_id=eq.${user.id}` },
         (payload) => {
-          console.log('Realtime event received:', payload);
+          console.log('✅ Realtime event received:', payload);
+          realtimeWorking = true;
           if (payload.eventType === 'INSERT') {
             setBookmarks(prev => [payload.new as Bookmark, ...prev]);
           } else if (payload.eventType === 'DELETE') {
@@ -78,9 +82,30 @@ export default function Home() {
       )
       .subscribe((status) => {
         console.log('Realtime Status:', status);
+
+        // If WebSocket fails, use polling as fallback
+        if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+          if (!pollingInterval) {
+            console.log('⚠️ WebSocket blocked - Using polling fallback (checks every 3s)');
+            pollingInterval = setInterval(() => {
+              if (!realtimeWorking) {
+                fetchBookmarks();
+              }
+            }, 3000); // Poll every 3 seconds
+          }
+        } else if (status === 'SUBSCRIBED') {
+          console.log('✅ Realtime connected successfully!');
+          realtimeWorking = true;
+          // Clear polling if realtime starts working
+          if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+          }
+        }
       });
 
     return () => {
+      if (pollingInterval) clearInterval(pollingInterval);
       supabase.removeChannel(channel).catch(() => { });
     };
   }, [user, fetchBookmarks]);
