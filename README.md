@@ -41,7 +41,7 @@ A real-time bookmark manager built with Next.js and Supabase, featuring Google O
 
 ### 1. Clone the repository
 ```bash
-git clone [your-repo-url]
+git clone Bookmark-App
 cd bookmark-app
 npm install
 ```
