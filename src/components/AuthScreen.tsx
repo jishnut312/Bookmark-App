@@ -10,15 +10,26 @@ export function AuthScreen() {
 
     const signInWithGoogle = async () => {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}`,
-            },
-        });
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/`,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
+                },
+            });
 
-        if (error) {
-            console.error('Error signing in:', error);
+            if (error) {
+                console.error('Error signing in:', error);
+                alert(`Login failed: ${error.message}`);
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            alert('An unexpected error occurred during login');
             setLoading(false);
         }
     };
