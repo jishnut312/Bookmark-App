@@ -66,6 +66,7 @@ export default function Home() {
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'bookmarks', filter: `user_id=eq.${user.id}` },
         (payload) => {
+          console.log('Realtime event received:', payload);
           if (payload.eventType === 'INSERT') {
             setBookmarks(prev => [payload.new as Bookmark, ...prev]);
           } else if (payload.eventType === 'DELETE') {
